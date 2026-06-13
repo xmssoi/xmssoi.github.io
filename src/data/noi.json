@@ -1,0 +1,226 @@
+[
+  {
+    "id": 1,
+    "name": "巫立凡",
+    "competition": "第27届全国青少年信息学奥林匹克竞赛（CCF NOI2010）",
+    "level": "国家级",
+    "rank": "银牌"
+  },
+  {
+    "id": 2,
+    "name": "林洋",
+    "competition": "第28届全国青少年信息学奥林匹克竞赛（CCF NOI2011）",
+    "level": "国家级",
+    "rank": "铜牌"
+  },
+  {
+    "id": 4,
+    "name": "许悦",
+    "competition": "第29届全国青少年信息学奥林匹克竞赛（CCF NOI2012）",
+    "level": "国家级",
+    "rank": "铜牌"
+  },
+  {
+    "id": 5,
+    "name": "陈昕昀",
+    "competition": "第29届全国青少年信息学奥林匹克竞赛（CCF NOI2012）",
+    "level": "国家级",
+    "rank": "铜牌"
+  },
+  {
+    "id": 7,
+    "name": "许悦",
+    "competition": "第30届全国青少年信息学奥林匹克竞赛（CCF NOI2013）",
+    "level": "国家级",
+    "rank": "银牌"
+  },
+  {
+    "id": 8,
+    "name": "冯哲",
+    "competition": "第30届全国青少年信息学奥林匹克竞赛（CCF NOI2013）",
+    "level": "国家级",
+    "rank": "铜牌"
+  },
+  {
+    "id": 9,
+    "name": "郭与珂",
+    "competition": "第30届全国青少年信息学奥林匹克竞赛（CCF NOI2013）",
+    "level": "国家级",
+    "rank": "铜牌"
+  },
+  {
+    "id": 11,
+    "name": "黄涛岸",
+    "competition": "第31届全国青少年信息学奥林匹克竞赛（CCF NOI2014）",
+    "level": "国家级",
+    "rank": "金牌"
+  },
+  {
+    "id": 12,
+    "name": "汪文潇",
+    "competition": "第31届全国青少年信息学奥林匹克竞赛（CCF NOI2014）",
+    "level": "国家级",
+    "rank": "金牌"
+  },
+  {
+    "id": 13,
+    "name": "成逸然",
+    "competition": "第31届全国青少年信息学奥林匹克竞赛（CCF NOI2014）",
+    "level": "国家级",
+    "rank": "银牌"
+  },
+  {
+    "id": 14,
+    "name": "郭与珂",
+    "competition": "第31届全国青少年信息学奥林匹克竞赛（CCF NOI2014）",
+    "level": "国家级",
+    "rank": "铜牌"
+  },
+  {
+    "id": 16,
+    "name": "汪文潇",
+    "competition": "第32届全国青少年信息学奥林匹克竞赛（CCF NOI2015）",
+    "level": "国家级",
+    "rank": "金牌"
+  },
+  {
+    "id": 17,
+    "name": "朱晨智",
+    "competition": "第32届全国青少年信息学奥林匹克竞赛（CCF NOI2015）",
+    "level": "国家级",
+    "rank": "金牌"
+  },
+  {
+    "id": 18,
+    "name": "林晓恩",
+    "competition": "第33届全国青少年信息学奥林匹克竞赛（CCF NOI2016）",
+    "level": "国家级",
+    "rank": "银牌"
+  },
+  {
+    "id": 21,
+    "name": "张宏",
+    "competition": "第34届全国青少年信息学奥林匹克竞赛（CCF NOI2017）",
+    "level": "国家级",
+    "rank": "铜牌"
+  },
+  {
+    "id": 24,
+    "name": "兰天",
+    "competition": "第35届全国青少年信息学奥林匹克竞赛（CCF NOI2018）",
+    "level": "国家级",
+    "rank": "银牌"
+  },
+  {
+    "id": 25,
+    "name": "江奕晨",
+    "competition": "第35届全国青少年信息学奥林匹克竞赛（CCF NOI2018）",
+    "level": "国家级",
+    "rank": "银牌"
+  },
+  {
+    "id": 26,
+    "name": "林荣恩",
+    "competition": "第35届全国青少年信息学奥林匹克竞赛（CCF NOI2018）",
+    "level": "国家级",
+    "rank": "铜牌"
+  },
+  {
+    "id": 29,
+    "name": "江雨桐",
+    "competition": "第36届全国青少年信息学奥林匹克竞赛（CCF NOI2019）",
+    "level": "国家级",
+    "rank": "银牌"
+  },
+  {
+    "id": 31,
+    "name": "施良致",
+    "competition": "第37届全国青少年信息学奥林匹克竞赛（CCF NOI2020）",
+    "level": "国家级",
+    "rank": "金牌"
+  },
+  {
+    "id": 32,
+    "name": "陈常杰",
+    "competition": "第38届全国青少年信息学奥林匹克竞赛（CCF NOI2021）",
+    "level": "国家级",
+    "rank": "银牌"
+  },
+  {
+    "id": 33,
+    "name": "章宏宇",
+    "competition": "第38届全国青少年信息学奥林匹克竞赛（CCF NOI2021）",
+    "level": "国家级",
+    "rank": "银牌"
+  },
+  {
+    "id": 35,
+    "name": "任舍予",
+    "competition": "第39届全国青少年信息学奥林匹克竞赛（CCF NOI2022）",
+    "level": "国家级",
+    "rank": "金牌"
+  },
+  {
+    "id": 36,
+    "name": "陈重乐",
+    "competition": "第39届全国青少年信息学奥林匹克竞赛（CCF NOI2022）",
+    "level": "国家级",
+    "rank": "银牌"
+  },
+  {
+    "id": 37,
+    "name": "李静榕",
+    "competition": "第40届全国青少年信息学奥林匹克竞赛（CCF NOI2023）",
+    "level": "国家级",
+    "rank": "金牌"
+  },
+  {
+    "id": 38,
+    "name": "林一楷",
+    "competition": "第40届全国青少年信息学奥林匹克竞赛（CCF NOI2023）",
+    "level": "国家级",
+    "rank": "银牌"
+  },
+  {
+    "id": 39,
+    "name": "施轩杰",
+    "competition": "第40届全国青少年信息学奥林匹克竞赛（CCF NOI2023）",
+    "level": "国家级",
+    "rank": "邀请赛铜牌"
+  },
+  {
+    "id": 40,
+    "name": "李静榕",
+    "competition": "第41届全国青少年信息学奥林匹克竞赛（CCF NOI2024）",
+    "level": "国家级",
+    "rank": "金牌"
+  },
+  {
+    "id": 41,
+    "name": "易楚曦",
+    "competition": "第41届全国青少年信息学奥林匹克竞赛（CCF NOI2024）",
+    "level": "国家级",
+    "rank": "银牌"
+  },
+  {
+    "id": 42,
+    "name": "叶焕宸",
+    "competition": "第41届全国青少年信息学奥林匹克竞赛（CCF NOI2024）",
+    "level": "国家级",
+    "rank": "铜牌"
+  },
+  {
+    "id": 43,
+    "name": "叶沐哲",
+    "competition": "第41届全国青少年信息学奥林匹克竞赛（CCF NOI2024）",
+    "level": "国家级",
+    "rank": "邀请赛铜牌"
+  },
+  {
+    "id": 44,
+    "name": "施轩杰",
+    "competition": "第42届全国青少年信息学奥林匹克竞赛（CCF NOI2025）",
+    "level": "国家级",
+    "rank": "银牌"
+  }
+]
