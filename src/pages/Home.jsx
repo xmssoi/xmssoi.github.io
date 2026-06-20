@@ -348,10 +348,10 @@ function Home() {
       {/* Team Awards Section */}
       <div style={{marginTop: '2rem'}}>
         <h2 style={{fontSize: '1.25rem', color: 'var(--primary)', marginBottom: '1rem', fontWeight: 'bold'}}>团队荣誉</h2>
-        <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap'}}>
+        <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center'}}>
           {[
-            { year: '2004年', name: 'NOIP2003', award: '优秀参赛学校', img: null },
-            { year: '2005年', name: 'NOIP2004', award: '优秀参赛学校', img: null },
+            { year: '2004年', name: 'NOIP2003', award: '优秀参赛学校', img: '/picture/2003.jpg' },
+            { year: '2005年', name: 'NOIP2004', award: '优秀参赛学校', img: '/picture/2004.jpg' },
             { year: '2014年', name: 'NOI30周年', award: '特色学校奖', img: '/picture/2014.jpg' },
             { year: '2019年', name: 'NOI35周年', award: '优秀学校', img: '/picture/2019.jpg' },
             { year: '2024年', name: 'NOI40周年', award: '优秀学校', img: '/picture/2024.jpg' },
@@ -366,11 +366,46 @@ function Home() {
                 boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
                 cursor: item.img ? 'pointer' : 'default',
                 fontSize: '0.875rem',
-                transition: 'all 0.2s'
+                transition: 'all 0.2s',
+                width: '180px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.5rem'
               }}
             >
-              <div style={{fontWeight: 'bold', color: 'var(--primary)'}}>{item.year} {item.name}</div>
-              <div style={{fontWeight: 'bold', color: 'var(--accent)'}}>{item.award}</div>
+              <div>
+                <div style={{fontWeight: 'bold', color: 'var(--primary)'}}>{item.year} {item.name}</div>
+                <div style={{fontWeight: 'bold', color: 'var(--accent)'}}>{item.award}</div>
+              </div>
+              {item.img ? (
+                <div style={{
+                  width: '100%',
+                  aspectRatio: '4 / 3',
+                  overflow: 'hidden',
+                  borderRadius: '4px',
+                  background: '#f7fafc'
+                }}>
+                  <img
+                    src={item.img}
+                    alt={`${item.year} ${item.name}`}
+                    style={{width: '100%', height: '100%', objectFit: 'cover', display: 'block'}}
+                  />
+                </div>
+              ) : (
+                <div style={{
+                  width: '100%',
+                  aspectRatio: '4 / 3',
+                  borderRadius: '4px',
+                  background: 'repeating-linear-gradient(45deg, #f7fafc, #f7fafc 8px, #edf2f7 8px, #edf2f7 16px)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#a0aec0',
+                  fontSize: '0.75rem'
+                }}>
+                  暂无图片
+                </div>
+              )}
             </div>
           ))}
         </div>
