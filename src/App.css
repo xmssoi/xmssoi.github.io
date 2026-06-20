@@ -379,3 +379,8 @@ tr:hover {
     display: none !important;
   }
 }
+.nav-logo {
+  height: 36px;
+  width: auto;
+  display: block;
+}

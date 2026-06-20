@@ -13,7 +13,10 @@ function App() {
       <DataProvider>
         <div className="app">
           <nav className="navbar">
-            <div className="nav-brand">双十中学信息学竞赛</div>
+            <Link to="/" className="nav-brand" style={{display: 'flex', alignItems: 'center', gap: '0.6rem', textDecoration: 'none'}}>
+              <img src="./sslogo.png" alt="" className="nav-logo" />
+              双十中学信息学竞赛
+            </Link>
             <div className="nav-links">
               <Link to="/">首页</Link>
               <Link to="/timeline">时间轴</Link>
