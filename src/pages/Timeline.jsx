@@ -53,9 +53,15 @@ const CONTEST_ICONS = {
   'NGOI': '👧',
   'CTS': '🎓',
 }
-const labelContest = (type) => {
+const LabelContest = ({ type }) => {
   const icon = CONTEST_ICONS[type]
-  return icon ? `${icon} ${type}` : type
+  if (!icon) return <>{type}</>
+  return (
+    <>
+      <span style={{display: 'block', fontSize: '1.1em', lineHeight: 1}}>{icon}</span>
+      {type}
+    </>
+  )
 }
 
 function Timeline() {
@@ -322,7 +328,7 @@ function Timeline() {
                 fontWeight: contestFilter === type ? 'bold' : 'normal'
               }}
             >
-              {labelContest(type)}
+              <LabelContest type={type} />
             </button>
           ))}
         </div>
@@ -440,7 +446,7 @@ function Timeline() {
                         fontSize: '0.75rem',
                         fontWeight: 'bold'
                       }}>
-                        {labelContest(compType)}
+                        <LabelContest type={compType} />
                       </span>
                       <span style={{fontWeight: 'bold', color: 'var(--primary)'}}>
                         {compType === '计算机基础知识' ? `${year}年全国计算机基础知识大奖赛` : `${year}${compType}`}
