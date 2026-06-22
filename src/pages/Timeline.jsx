@@ -39,6 +39,25 @@ import NOI2024 from '../../picture/noi/NOI2024.jpg'
 // Get all unique contest types
 const contestTypes = ['NOIP提高', 'NOIP普及', 'CSP-S', 'CSP-J', 'APIO', 'NOI', 'NOI邀请赛', 'WC', 'CTSC', 'NGOI', 'CTS']
 
+// 赛事 emoji 图标（仅展示用，不参与逻辑判断）
+const CONTEST_ICONS = {
+  'NOIP提高': '🥇',
+  'NOIP普及': '🥈',
+  'CSP-S': '🚀',
+  'CSP-J': '📗',
+  'APIO': '🌏',
+  'NOI': '🏆',
+  'NOI邀请赛': '🎟️',
+  'WC': '❄️',
+  'CTSC': '🎯',
+  'NGOI': '👧',
+  'CTS': '🎓',
+}
+const labelContest = (type) => {
+  const icon = CONTEST_ICONS[type]
+  return icon ? `${icon} ${type}` : type
+}
+
 function Timeline() {
   const { awards: awardsData } = useData()
   const [selectedYear, setSelectedYear] = useState(null)
@@ -303,7 +322,7 @@ function Timeline() {
                 fontWeight: contestFilter === type ? 'bold' : 'normal'
               }}
             >
-              {type}
+              {labelContest(type)}
             </button>
           ))}
         </div>
@@ -421,7 +440,7 @@ function Timeline() {
                         fontSize: '0.75rem',
                         fontWeight: 'bold'
                       }}>
-                        {compType}
+                        {labelContest(compType)}
                       </span>
                       <span style={{fontWeight: 'bold', color: 'var(--primary)'}}>
                         {compType === '计算机基础知识' ? `${year}年全国计算机基础知识大奖赛` : `${year}${compType}`}
