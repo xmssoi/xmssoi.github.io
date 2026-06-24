@@ -82,7 +82,7 @@ function Timeline() {
       const isCsp = award.contest.startsWith('CSP')
 
       // Handle historical competition (全国青少年计算机程序设计竞赛)
-      const isHistorical = /^\d{4}全国青少年计算机程序设计竞赛/.test(award.contest)
+      const isHistorical = /(?:^\d{4}全国青少年计算机程序设计竞赛|^全国青少年计算机程序设计竞赛\s*\(\d{4}\))/.test(award.contest)
 
       // Handle 全国计算机基础知识大奖赛
       const isBasicKnowledge = /^\d{4}年全国计算机基础知识大奖赛/.test(award.contest)
@@ -449,7 +449,7 @@ function Timeline() {
                         <LabelContest type={compType} />
                       </span>
                       <span style={{fontWeight: 'bold', color: 'var(--primary)'}}>
-                        {compType === '计算机基础知识' ? `${year}年全国计算机基础知识大奖赛` : `${year}${compType}`}
+                        {compType === '计算机基础知识' ? `${year}年全国计算机基础知识大奖赛` : compType.startsWith('全国青少年计算机程序设计竞赛') ? `${compType} (${year})` : `${year}${compType}`}
                       </span>
                     </div>
 
