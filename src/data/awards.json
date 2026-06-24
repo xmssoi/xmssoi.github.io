@@ -1,18 +1,5 @@
 [
   {
-    "contest": "1985全国青少年计算机程序设计竞赛",
-    "pride": "省一等奖",
-    "name": "滕达",
-    "grade": "",
-    "school": "厦门双十中学",
-    "score": "",
-    "province": "福建",
-    "gender": "",
-    "null": [
-      ""
-    ]
-  },
-    {
     "contest": "1987全国青少年计算机程序设计竞赛",
     "pride": "省一等奖",
     "name": "许可立",
@@ -51,7 +38,7 @@
       ""
     ]
   },
-    {
+  {
     "contest": "1988全国青少年计算机程序设计竞赛BASIC高中组",
     "pride": "省三等奖",
     "name": "陈莹",
@@ -1078,7 +1065,7 @@
       ""
     ]
   },
-    {
+  {
     "contest": "NOIP2001提高",
     "pride": "一等奖",
     "name": "朱韵成",
@@ -2274,7 +2261,7 @@
       ""
     ]
   },
-    {
+  {
     "contest": "NOIP2008提高",
     "pride": "二等奖",
     "name": "许汪洋",
@@ -2508,7 +2495,7 @@
       ""
     ]
   },
-    {
+  {
     "contest": "NOIP2008提高",
     "pride": "一等奖",
     "name": "陈林霄",
@@ -24577,6 +24564,116 @@
     "school": "厦门双十中学",
     "score": "",
     "province": "",
+    "gender": "",
+    "null": [
+      ""
+    ]
+  },
+  {
+    "contest": "全国青少年计算机程序设计竞赛 (1985)",
+    "pride": "省初中组一等奖",
+    "name": "滕达",
+    "grade": "初三",
+    "school": "厦门双十中学",
+    "score": "",
+    "province": "福建",
+    "gender": "",
+    "teacher": "吴素珍、潘宝英",
+    "null": [
+      ""
+    ]
+  },
+  {
+    "contest": "全国青少年计算机程序设计竞赛 (1985)",
+    "pride": "省初中组一等奖",
+    "name": "黄毅龙",
+    "grade": "初三",
+    "school": "厦门双十中学",
+    "score": "",
+    "province": "福建",
+    "gender": "",
+    "teacher": "吴素珍、潘宝英",
+    "null": [
+      ""
+    ]
+  },
+  {
+    "contest": "全国青少年计算机程序设计竞赛 (1985)",
+    "pride": "省初中组二等奖",
+    "name": "胡若愚",
+    "grade": "初三",
+    "school": "厦门双十中学",
+    "score": "",
+    "province": "福建",
+    "gender": "",
+    "teacher": "吴素珍、潘宝英",
+    "null": [
+      ""
+    ]
+  },
+  {
+    "contest": "全国青少年计算机程序设计竞赛 (1985)",
+    "pride": "省初中组二等奖",
+    "name": "杨扬",
+    "grade": "初三",
+    "school": "厦门双十中学",
+    "score": "",
+    "province": "福建",
+    "gender": "",
+    "teacher": "吴素珍、潘宝英",
+    "null": [
+      ""
+    ]
+  },
+  {
+    "contest": "全国青少年计算机程序设计竞赛 (1985)",
+    "pride": "省初中组三等奖",
+    "name": "陈雪颖",
+    "grade": "初二",
+    "school": "厦门双十中学",
+    "score": "",
+    "province": "福建",
+    "gender": "",
+    "teacher": "吴素珍、潘宝英",
+    "null": [
+      ""
+    ]
+  },
+  {
+    "contest": "全国青少年计算机程序设计竞赛 (1985)",
+    "pride": "省高中组三等奖",
+    "name": "张菁",
+    "grade": "高一",
+    "school": "厦门双十中学",
+    "score": "",
+    "province": "福建",
+    "gender": "",
+    "teacher": "吴素珍、潘宝英",
+    "null": [
+      ""
+    ]
+  },
+  {
+    "contest": "NOIP2012提高",
+    "pride": "二等奖",
+    "name": "苏锦海",
+    "grade": "",
+    "school": "厦门双十中学",
+    "score": "",
+    "province": "福建",
+    "gender": "",
+    "null": [
+      ""
+    ]
+  },
+  {
+    "contest": "NOIP2012提高",
+    "pride": "二等奖",
+    "name": "林士翰",
+    "grade": "",
+    "school": "厦门双十中学",
+    "score": "",
+    "province": "福建",
     "gender": "",
     "null": [
       ""

@@ -117,6 +117,16 @@ function Search() {
     return true
   })
 
+  // Convert filtered NOI to awards-like shape so downstream renderers can use uniform fields (pride/contest/grade)
+  const filteredNoiAsAwards = filteredNoi.map(n => ({
+    name: n.name,
+    contest: n.competition,
+    pride: n.rank,
+    grade: n.level,
+    school: '',
+    source: 'noi'
+  }))
+
   // Group by student for name search (include both awards and NOI data)
   const getStudentRecords = () => {
     const studentMap = {}
@@ -447,7 +457,7 @@ function Search() {
               </tr>
             </thead>
             <tbody>
-              {(searchType === 'name' ? students : [...filteredAwards, ...filteredNoi].slice(0, 100)).map((item, idx) => (
+              {(searchType === 'name' ? students : [...filteredAwards, ...filteredNoiAsAwards].slice(0, 100)).map((item, idx) => (
                 <tr
                   key={idx}
                   onClick={() => {
