@@ -358,29 +358,39 @@ function Timeline() {
         gap: '0.75rem',
         marginBottom: '2rem'
       }}>
-        {['一等奖', '二等奖', '三等奖', '金牌', '银牌', '铜牌'].map(type => {
-          const count = Object.values(stats).reduce((sum, yearData) => {
+        {(() => {
+          const medalTypes = ['金牌', '银牌', '铜牌']
+          const tierTypes = ['一等奖', '二等奖', '三等奖']
+          const countOf = (type) => Object.values(stats).reduce((sum, yearData) => {
             return sum + Object.values(yearData).reduce((s, compData) => {
               return s + (compData[type]?.length || 0)
             }, 0)
           }, 0)
-          return (
-            <div
-              key={type}
-              style={{
-                background: 'white',
-                padding: '0.75rem',
-                borderRadius: '8px',
-                textAlign: 'center',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-                borderLeft: `4px solid ${getBadgeColor(type)}`
-              }}
-            >
-              <div style={{fontSize: '1.5rem', fontWeight: 'bold', color: getBadgeColor(type)}}>{count}</div>
-              <div style={{fontSize: '0.75rem', color: '#718096'}}>{type}</div>
-            </div>
-          )
-        })}
+          const hasMedals = medalTypes.some(t => countOf(t) > 0)
+          const hasTiers = tierTypes.some(t => countOf(t) > 0)
+          const displayTypes = []
+          if (hasMedals) displayTypes.push(...medalTypes)
+          if (hasTiers) displayTypes.push(...tierTypes)
+          return displayTypes.map(type => {
+            const count = countOf(type)
+            return (
+              <div
+                key={type}
+                style={{
+                  background: 'white',
+                  padding: '0.75rem',
+                  borderRadius: '8px',
+                  textAlign: 'center',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                  borderLeft: `4px solid ${getBadgeColor(type)}`
+                }}
+              >
+                <div style={{fontSize: '1.5rem', fontWeight: 'bold', color: getBadgeColor(type)}}>{count}</div>
+                <div style={{fontSize: '0.75rem', color: '#718096'}}>{type}</div>
+              </div>
+            )
+          })
+        })()}
       </div>
 
       {/* Year Index */}
