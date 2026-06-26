@@ -454,25 +454,33 @@ function Timeline() {
                     </div>
 
                     <div style={{display: 'flex', gap: '0.5rem', alignItems: 'center'}}>
-                      {['一等奖', '金牌', '银牌', '铜牌', '二等奖', '三等奖'].map(type => {
-                        const names = compData[type] || []
-                        if (names.length === 0) return null
-                        return (
-                          <span
-                            key={type}
-                            style={{
-                              padding: '0.2rem 0.4rem',
-                              borderRadius: '4px',
-                              fontSize: '0.7rem',
-                              fontWeight: 'bold',
-                              background: getBadgeColor(type),
-                              color: getTextColor(type)
-                            }}
-                          >
-                            {type}: {names.length}
-                          </span>
-                        )
-                      })}
+                      {(() => {
+                        const medalTypes = ['金牌', '银牌', '铜牌']
+                        const tierTypes = ['一等奖', '二等奖', '三等奖']
+                        const hasMedals = medalTypes.some(t => (compData[t]?.length || 0) > 0)
+                        const hasTiers = tierTypes.some(t => (compData[t]?.length || 0) > 0)
+                        const displayTypes = []
+                        if (hasMedals) displayTypes.push(...medalTypes)
+                        if (hasTiers) displayTypes.push(...tierTypes)
+                        return displayTypes.map(type => {
+                          const names = compData[type] || []
+                          return (
+                            <span
+                              key={type}
+                              style={{
+                                padding: '0.2rem 0.4rem',
+                                borderRadius: '4px',
+                                fontSize: '0.7rem',
+                                fontWeight: 'bold',
+                                background: getBadgeColor(type),
+                                color: getTextColor(type)
+                              }}
+                            >
+                              {type}: {names.length}
+                            </span>
+                          )
+                        })
+                      })()}
                       <span style={{color: '#A0AEC0', marginLeft: '0.5rem'}}>
                         {selectedYear === `${year}-${compType}` ? '▲' : '▼'}
                       </span>
@@ -487,23 +495,31 @@ function Timeline() {
                         return (
                           <>
                            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem'}}>
-                              {['一等奖', '金牌', '银牌', '铜牌', '二等奖', '三等奖'].map(type => {
-                                const names = compData[type] || []
-                                if (names.length === 0) return null
-                                return (
-                                  <div key={type} style={{marginBottom: '0.5rem'}}>
-                                    <div style={{
-                                      fontSize: '0.75rem',
-                                      fontWeight: 'bold',
-                                      color: getBadgeColor(type),
-                                      marginBottom: '0.25rem'
-                                    }}>
-                                      {type} ({names.length}人)
+                              {(() => {
+                                const medalTypes = ['金牌', '银牌', '铜牌']
+                                const tierTypes = ['一等奖', '二等奖', '三等奖']
+                                const hasMedals = medalTypes.some(t => (compData[t]?.length || 0) > 0)
+                                const hasTiers = tierTypes.some(t => (compData[t]?.length || 0) > 0)
+                                const displayTypes = []
+                                if (hasMedals) displayTypes.push(...medalTypes)
+                                if (hasTiers) displayTypes.push(...tierTypes)
+                                return displayTypes.map(type => {
+                                  const names = compData[type] || []
+                                  return (
+                                    <div key={type} style={{marginBottom: '0.5rem'}}>
+                                      <div style={{
+                                        fontSize: '0.75rem',
+                                        fontWeight: 'bold',
+                                        color: getBadgeColor(type),
+                                        marginBottom: '0.25rem'
+                                      }}>
+                                        {type} ({names.length}人)
+                                      </div>
+                                      <div>{renderStudentList(names)}</div>
                                     </div>
-                                    <div>{renderStudentList(names)}</div>
-                                  </div>
-                                )
-                              })}
+                                  )
+                                })
+                              })()}
                             </div>
                             {photo && (
                               <div style={{marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border)'}}>
