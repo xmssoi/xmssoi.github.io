@@ -364,6 +364,7 @@ function Timeline() {
               return s + (compData[type]?.length || 0)
             }, 0)
           }, 0)
+          if (count === 0) return null
           return (
             <div
               key={type}
