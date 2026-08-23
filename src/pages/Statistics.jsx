@@ -34,11 +34,23 @@ function Statistics() {
   const [cspJYear, setCspJYear] = useState('全部')
   const [cspJLevel, setCspJLevel] = useState('全部')
 
-  // NOI medals
+  // NOI medals: use awards.json as primary + noi.json deduped (consistent with Search.jsx and Home.jsx)
+  const _statAwardKeys = new Set(awardsData.map(a => {
+    const _y = a.contest.match(/(\d{4})/)?.[1] || ''
+    const _isInv = a.contest.includes('D类') || a.pride.includes('邀请赛')
+    const _medal = a.pride.replace('邀请赛', '')
+    return _y + '|' + a.name + '|' + (_isInv ? 'inv' : 'reg') + '|' + _medal
+  }))
+  const _noiPosDedup = noiData.filter(n => {
+    if (n.rank?.includes('邀请赛')) return false
+    const _y = n.competition.match(/(\d{4})/)?.[1] || ''
+    return !_statAwardKeys.has(_y + '|' + n.name + '|reg|' + n.rank)
+  })
+  const _noiPosAwards = awardsData.filter(a => a.contest?.startsWith('NOI') && !a.contest.includes('D类'))
   const noiMedals = {
-    gold: noiData.filter(x => x.rank === '金牌').length,
-    silver: noiData.filter(x => x.rank === '银牌').length,
-    bronze: noiData.filter(x => x.rank === '铜牌').length,
+    gold: _noiPosAwards.filter(a => a.pride === '金牌').length + _noiPosDedup.filter(x => x.rank === '金牌').length,
+    silver: _noiPosAwards.filter(a => a.pride === '银牌').length + _noiPosDedup.filter(x => x.rank === '银牌').length,
+    bronze: _noiPosAwards.filter(a => a.pride === '铜牌').length + _noiPosDedup.filter(x => x.rank === '铜牌').length,
   }
 
   // Calculate totals
@@ -69,6 +81,31 @@ function Statistics() {
       return a.contest.includes('提高') && a.pride === '三等奖'
     }).length,
   }
+
+  // NOI 邀请赛 yearly data
+  const noiInviteAllItems = [
+    ..._noiInvDedup.map(n => ({
+      name: n.name,
+      contest: n.competition,
+      medal: (n.rank || '').replace('邀请赛', ''),
+      year: parseInt(n.competition.match(/(\d{4})/)?.[1] || 0),
+      src: 'noi'
+    })),
+    ...awardsData.filter(a => a.contest?.includes('D类')).map(a => {
+      const m = a.contest.match(/NOI(\d{4})D类/)
+      const year = m ? parseInt(m[1]) : 0
+      return {
+        name: a.name,
+        contest: `第${year - 1983}届全国青少年信息学奥林匹克竞赛（CCF NOI${year}）`,
+        medal: a.pride,
+        year,
+        src: 'dLei'
+      }
+    })
+  ]
+  const noiInviteYears = [...new Set(noiInviteAllItems.map(i => i.year).filter(Boolean))].sort((a, b) => b - a)
+  const [noiInviteYear, setNoiInviteYear] = useState('全部')
+  const [noiInviteLevel, setNoiInviteLevel] = useState('全部')
 
   // NOIP普及组 awards.json counts
   const noipPujiAwardsData = {
@@ -173,7 +210,7 @@ function Statistics() {
       <div style={{marginBottom: '2rem'}}>
         <div style={{display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem'}}>
           {competitionTotals.map(comp => (
-            <div key={comp.key} style={{background: 'white', padding: '1rem', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', cursor: 'pointer', border: selectedCompetition === comp.key ? '2px solid var(--primary)' : '2px solid transparent'}} onClick={() => { setSelectedCompetition(comp.key); setSelectedMedal(null); if(comp.key === 'NOIP提高') setNoipLevel('全部'); if(comp.key === 'NOIP普及') setNoipPujiLevel('全部'); if(comp.key === 'CSP-S') setCspSLevel('全部'); if(comp.key === 'CSP-J') setCspJLevel('全部'); }}>
+            <div key={comp.key} style={{background: 'white', padding: '1rem', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', cursor: 'pointer', border: selectedCompetition === comp.key ? '2px solid var(--primary)' : '2px solid transparent'}} onClick={() => { setSelectedCompetition(comp.key); setSelectedMedal(null); if(comp.key === 'NOIP提高') setNoipLevel('全部'); if(comp.key === 'NOIP普及') setNoipPujiLevel('全部'); if(comp.key === 'CSP-S') setCspSLevel('全部'); if(comp.key === 'CSP-J') setCspJLevel('全部'); if(comp.key === 'NOI邀请赛') { setNoiInviteYear('全部'); setNoiInviteLevel('全部'); } }}>
               <h3 style={{color: comp.color, marginBottom: '0.25rem', fontSize: '1rem'}}>{comp.name}</h3>
               <p style={{color: '#718096', fontSize: '0.75rem', marginBottom: '0.75rem'}}>{comp.total}人</p>
               <div style={{display: 'flex', justifyContent: 'space-around', textAlign: 'center'}}>
@@ -223,12 +260,11 @@ function Statistics() {
         </div>
       </div>
 
-      {/* Competition Table - for NOI, NOI邀请赛, WC, APIO */}
-      {['NOI', 'NOI邀请赛', 'WC', 'APIO'].includes(selectedCompetition) && (
+      {/* Competition Table - for NOI, WC, APIO (NOI邀请赛 has its own per-year table below) */}
+      {['NOI', 'WC', 'APIO'].includes(selectedCompetition) && (
         <div className="card" style={{marginTop: '1rem'}}>
           <h3 className="card-title">
             {selectedCompetition === 'NOI' && '全国赛获奖选手 (NOI 2010-2025)'}
-            {selectedCompetition === 'NOI邀请赛' && '邀请赛获奖选手 (NOI邀请赛 2012-2025)'}
             {selectedCompetition === 'WC' && 'WC冬令营获奖选手 (WC 2015-2026)'}
             {selectedCompetition === 'APIO' && 'APIO亚洲太平洋获奖选手 (APIO 2010-2025)'}
             {selectedMedal && <span style={{color: selectedMedal === '金牌' ? '#856404' : selectedMedal === '银牌' ? '#6c757d' : '#8B4513'}}> {selectedMedal}</span>}
@@ -237,17 +273,29 @@ function Statistics() {
             <table style={{width: '100%'}}>
               <tbody>
                 {selectedCompetition === 'NOI' && (() => {
-                  const noiItems = noiData.filter(item => {
-                    const yearMatch = item.competition.match(/NOI(\d{4})/)
-                    if (!yearMatch || parseInt(yearMatch[1]) < 2010) return false
-                    if (item.rank?.includes('邀请赛')) return false
-                    if (selectedMedal && item.rank !== selectedMedal) return false
-                    return true
-                  }).map(item => ({
-                    name: item.name,
-                    contest: item.competition,
-                    pride: item.rank
-                  }))
+                  const noiItems = [
+                    ...awardsData.filter(item => {
+                      if (!item.contest?.startsWith('NOI') || item.contest.includes('D类')) return false
+                      const yearMatch = item.contest.match(/NOI(\d{4})/)
+                      if (!yearMatch || parseInt(yearMatch[1]) < 2010) return false
+                      if (selectedMedal && item.pride !== selectedMedal) return false
+                      return true
+                    }).map(item => ({
+                      name: item.name,
+                      contest: item.contest,
+                      pride: item.pride
+                    })),
+                    ..._noiPosDedup.filter(item => {
+                      const yearMatch = item.competition.match(/NOI(\d{4})/)
+                      if (!yearMatch || parseInt(yearMatch[1]) < 2010) return false
+                      if (selectedMedal && item.rank !== selectedMedal) return false
+                      return true
+                    }).map(item => ({
+                      name: item.name,
+                      contest: item.competition,
+                      pride: item.rank
+                    }))
+                  ]
                   return noiItems.sort((a, b) => {
                     const yearA = parseInt(a.contest.match(/NOI(\d{4})/)?.[1] || 0)
                     const yearB = parseInt(b.contest.match(/NOI(\d{4})/)?.[1] || 0)
@@ -266,55 +314,6 @@ function Statistics() {
                           fontWeight: 'bold',
                           background: item.pride === '金牌' ? '#FFD700' : item.pride === '银牌' ? '#C0C0C0' : '#CD7F32',
                           color: item.pride === '金牌' ? '#000' : '#fff'
-                        }}>
-                          {item.pride}
-                        </span>
-                      </td>
-                    </tr>
-                  ))
-                })()}
-                {selectedCompetition === 'NOI邀请赛' && (() => {
-                  const noiInviteItems = _noiInvDedup.filter(item => {
-                    if (selectedMedal && item.rank !== '邀请赛' + selectedMedal) return false
-                    return true
-                  }).map(item => ({
-                    name: item.name,
-                    contest: item.competition,
-                    pride: item.rank
-                  }))
-                  const dLeiItems = awardsData.filter(item => {
-                    if (!item.contest?.includes('D类')) return false
-                    if (selectedMedal && item.pride !== selectedMedal) return false
-                    return true
-                  }).map(item => {
-                    // Convert NOIxxxxD类 → full contest name (e.g. 第43届...NOI2026), medal add 邀请赛 prefix
-                    const match = item.contest.match(/NOI(\d{4})D类/)
-                    let contest = item.contest
-                    if (match) {
-                      const year = match[1]
-                      const nth = parseInt(year) - 1983
-                      contest = `第${nth}届全国青少年信息学奥林匹克竞赛（CCF NOI${year}）`
-                    }
-                    return { name: item.name, contest, pride: '邀请赛' + item.pride }
-                  })
-                  return [...noiInviteItems, ...dLeiItems].sort((a, b) => {
-                    const yearA = parseInt(a.contest.match(/NOI(\d{4})/)?.[1] || 0)
-                    const yearB = parseInt(b.contest.match(/NOI(\d{4})/)?.[1] || 0)
-                    if (yearB !== yearA) return yearB - yearA
-                    const order = { '金牌': 1, '银牌': 2, '铜牌': 3, '邀请赛金牌': 1, '邀请赛银牌': 2, '邀请赛铜牌': 3 }
-                    return (order[a.pride] || 99) - (order[b.pride] || 99)
-                  }).map((item, idx) => (
-                    <tr key={idx}>
-                      <td>{item.name}</td>
-                      <td style={{fontSize: '0.875rem', color: '#718096'}}>{item.contest}</td>
-                      <td>
-                        <span style={{
-                          padding: '0.25rem 0.5rem',
-                          borderRadius: '4px',
-                          fontSize: '0.75rem',
-                          fontWeight: 'bold',
-                          background: item.pride === '金牌' || item.pride === '邀请赛金牌' ? '#FFD700' : item.pride === '银牌' || item.pride === '邀请赛银牌' ? '#C0C0C0' : '#CD7F32',
-                          color: item.pride === '金牌' || item.pride === '邀请赛金牌' ? '#000' : '#fff'
                         }}>
                           {item.pride}
                         </span>
@@ -374,6 +373,135 @@ function Statistics() {
                         color: item.pride === '金牌' ? '#000' : '#fff'
                       }}>
                         {item.pride}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* NOI 邀请赛 Table - per-year breakdown */}
+      {selectedCompetition === 'NOI邀请赛' && (
+        <div className="card" style={{marginTop: '1rem'}}>
+          <h3 className="card-title">NOI 邀请赛成绩 {noiInviteYear === '全部' ? '(按年份汇总)' : `(NOI${noiInviteYear})`}</h3>
+
+          {/* Per-year summary table */}
+          <div style={{marginBottom: '1.5rem', overflowX: 'auto'}}>
+            <table style={{width: '100%', fontSize: '0.875rem'}}>
+              <thead>
+                <tr style={{background: '#f7fafc'}}>
+                  <th style={{padding: '0.5rem', textAlign: 'left', borderBottom: '2px solid var(--border)'}}>年份</th>
+                  <th style={{padding: '0.5rem', textAlign: 'center', borderBottom: '2px solid var(--border)', color: '#856404'}}>金牌</th>
+                  <th style={{padding: '0.5rem', textAlign: 'center', borderBottom: '2px solid var(--border)', color: '#6c757d'}}>银牌</th>
+                  <th style={{padding: '0.5rem', textAlign: 'center', borderBottom: '2px solid var(--border)', color: '#8B4513'}}>铜牌</th>
+                  <th style={{padding: '0.5rem', textAlign: 'center', borderBottom: '2px solid var(--border)'}}>总计</th>
+                </tr>
+              </thead>
+              <tbody>
+                {noiInviteYears.map(y => {
+                  const items = noiInviteAllItems.filter(i => i.year === y)
+                  const gold = items.filter(i => i.medal === '金牌').length
+                  const silver = items.filter(i => i.medal === '银牌').length
+                  const bronze = items.filter(i => i.medal === '铜牌').length
+                  const isSelected = noiInviteYear === y
+                  return (
+                    <tr key={y} onClick={() => { setNoiInviteYear(isSelected ? '全部' : y); setNoiInviteLevel('全部'); }}
+                        style={{cursor: 'pointer', background: isSelected ? '#e6f7ff' : 'transparent', borderBottom: '1px solid var(--border)'}}>
+                      <td style={{padding: '0.5rem', fontWeight: 'bold'}}>NOI{y}</td>
+                      <td style={{padding: '0.5rem', textAlign: 'center', color: gold > 0 ? '#856404' : '#cbd5e0'}}>{gold}</td>
+                      <td style={{padding: '0.5rem', textAlign: 'center', color: silver > 0 ? '#6c757d' : '#cbd5e0'}}>{silver}</td>
+                      <td style={{padding: '0.5rem', textAlign: 'center', color: bronze > 0 ? '#8B4513' : '#cbd5e0'}}>{bronze}</td>
+                      <td style={{padding: '0.5rem', textAlign: 'center', fontWeight: 'bold'}}>{gold + silver + bronze}</td>
+                    </tr>
+                  )
+                })}
+                <tr style={{background: '#f7fafc', fontWeight: 'bold', borderTop: '2px solid var(--border)'}}>
+                  <td style={{padding: '0.5rem'}}>合计</td>
+                  <td style={{padding: '0.5rem', textAlign: 'center', color: '#856404'}}>{noiInviteAllItems.filter(i => i.medal === '金牌').length}</td>
+                  <td style={{padding: '0.5rem', textAlign: 'center', color: '#6c757d'}}>{noiInviteAllItems.filter(i => i.medal === '银牌').length}</td>
+                  <td style={{padding: '0.5rem', textAlign: 'center', color: '#8B4513'}}>{noiInviteAllItems.filter(i => i.medal === '铜牌').length}</td>
+                  <td style={{padding: '0.5rem', textAlign: 'center'}}>{noiInviteAllItems.length}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {/* Filters */}
+          <div style={{display: 'flex', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap', alignItems: 'center'}}>
+            <div style={{display: 'flex', gap: '0.5rem', alignItems: 'center'}}>
+              <span style={{fontWeight: 'bold', fontSize: '0.875rem'}}>年份:</span>
+              <select
+                value={noiInviteYear}
+                onChange={(e) => { setNoiInviteYear(e.target.value === '全部' ? '全部' : parseInt(e.target.value)); setNoiInviteLevel('全部'); }}
+                style={{padding: '0.4rem', borderRadius: '6px', border: '2px solid var(--border)', fontSize: '0.875rem'}}
+              >
+                <option value="全部">全部</option>
+                {noiInviteYears.map(year => (
+                  <option key={year} value={year}>{year}</option>
+                ))}
+              </select>
+            </div>
+
+            <div style={{display: 'flex', gap: '0.5rem', alignItems: 'center'}}>
+              <span style={{fontWeight: 'bold', fontSize: '0.875rem'}}>等级:</span>
+              <div style={{display: 'flex', gap: '0.25rem'}}>
+                {['全部', '金牌', '银牌', '铜牌'].map(level => (
+                  <button
+                    key={level}
+                    onClick={() => setNoiInviteLevel(level)}
+                    style={{
+                      padding: '0.3rem 0.6rem',
+                      borderRadius: '6px',
+                      border: 'none',
+                      cursor: 'pointer',
+                      background: noiInviteLevel === level ? 'var(--primary)' : '#E2E8F0',
+                      color: noiInviteLevel === level ? 'white' : 'var(--text)',
+                      fontSize: '0.75rem',
+                      fontWeight: noiInviteLevel === level ? 'bold' : 'normal'
+                    }}
+                  >
+                    {level}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div style={{maxHeight: '500px', overflowY: 'auto'}}>
+            <table style={{width: '100%'}}>
+              <thead>
+                <tr>
+                  <th style={{minWidth: '100px'}}>姓名</th>
+                  <th>比赛</th>
+                  <th>奖项</th>
+                </tr>
+              </thead>
+              <tbody>
+                {noiInviteAllItems.filter(item => {
+                  if (noiInviteYear !== '全部' && item.year !== noiInviteYear) return false
+                  if (noiInviteLevel !== '全部' && item.medal !== noiInviteLevel) return false
+                  return true
+                }).sort((a, b) => {
+                  if (b.year !== a.year) return b.year - a.year
+                  const order = { '金牌': 1, '银牌': 2, '铜牌': 3 }
+                  return (order[a.medal] || 99) - (order[b.medal] || 99)
+                }).map((item, idx) => (
+                  <tr key={idx}>
+                    <td>{item.name}</td>
+                    <td style={{fontSize: '0.875rem', color: '#718096'}}>{item.contest}</td>
+                    <td>
+                      <span style={{
+                        padding: '0.25rem 0.5rem',
+                        borderRadius: '4px',
+                        fontSize: '0.75rem',
+                        fontWeight: 'bold',
+                        background: item.medal === '金牌' ? '#FFD700' : item.medal === '银牌' ? '#C0C0C0' : '#CD7F32',
+                        color: item.medal === '金牌' ? '#000' : '#fff'
+                      }}>
+                        {item.medal}
                       </span>
                     </td>
                   </tr>
