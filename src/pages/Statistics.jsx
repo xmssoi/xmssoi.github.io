@@ -127,17 +127,36 @@ function Statistics() {
     }).length,
   }
 
-  // NOI D类 records from awards.json (same as NOI全国赛, NOT邀请赛)
+  // NOI D类 records from awards.json (NOI D类 = NOI 邀请赛)
   const noiD类Data = {
     gold: awardsData.filter(a => a.contest?.includes('D类') && a.pride === '金牌').length,
     silver: awardsData.filter(a => a.contest?.includes('D类') && a.pride === '银牌').length,
     bronze: awardsData.filter(a => a.contest?.includes('D类') && a.pride === '铜牌').length,
   }
 
+  // Dedup noi.json 邀请赛 entries against awards.json (same key strategy as Search.jsx)
+  const _awardKeys = new Set(awardsData.map(a => {
+    const _year = a.contest.match(/(\d{4})/)?.[1] || ''
+    const _isInv = a.contest.includes('D类') || a.pride.includes('邀请赛')
+    const _medal = a.pride.replace('邀请赛', '')
+    return _year + '|' + a.name + '|' + (_isInv ? 'inv' : 'reg') + '|' + _medal
+  }))
+  const _noiInvDedup = noiData.filter(n => {
+    if (!n.rank?.includes('邀请赛')) return false
+    const _year = n.competition.match(/(\d{4})/)?.[1] || ''
+    const _medal = (n.rank || '').replace('邀请赛', '')
+    return !_awardKeys.has(_year + '|' + n.name + '|inv|' + _medal)
+  })
+  const noiInvData = {
+    gold: _noiInvDedup.filter(x => x.rank === '邀请赛金牌').length,
+    silver: _noiInvDedup.filter(x => x.rank === '邀请赛银牌').length,
+    bronze: _noiInvDedup.filter(x => x.rank === '邀请赛铜牌').length,
+  }
+
   // Competition totals for summary cards
   const competitionTotals = [
     { key: 'NOI', name: 'NOI 全国赛', total: noiMedals.gold + noiMedals.silver + noiMedals.bronze, color: '#805AD5' },
-    { key: 'NOI邀请赛', name: 'NOI邀请赛', total: noiData.filter(x => x.rank?.includes('邀请赛')).length + noiD类Data.gold + noiD类Data.silver + noiD类Data.bronze, color: '#9F7AEA' },
+    { key: 'NOI邀请赛', name: 'NOI邀请赛', total: noiInvData.gold + noiInvData.silver + noiInvData.bronze + noiD类Data.gold + noiD类Data.silver + noiD类Data.bronze, color: '#9F7AEA' },
     { key: 'WC', name: 'WC冬令营', total: 54, color: '#DD6B20' },
     { key: 'APIO', name: 'APIO', total: totalAPIO.gold + totalAPIO.silver + totalAPIO.bronze, color: '#38A169' },
     { key: 'NOIP提高', name: 'NOIP 提高组', total: noipAwardsData.first + noipAwardsData.second + noipAwardsData.third, color: '#E53E3E' },
@@ -164,9 +183,9 @@ function Statistics() {
                   <div onClick={(e) => { e.stopPropagation(); setSelectedCompetition('NOI'); setSelectedMedal('铜牌'); }}><div style={{fontSize: '1.25rem', fontWeight: 'bold', color: '#8B4513', cursor: 'pointer'}}>{noiMedals.bronze}</div><div style={{fontSize: '0.65rem', color: '#718096'}}>铜牌</div></div>
                 </>}
                 {comp.key === 'NOI邀请赛' && <>
-                  <div onClick={(e) => { e.stopPropagation(); setSelectedCompetition('NOI邀请赛'); setSelectedMedal('金牌'); }}><div style={{fontSize: '1.25rem', fontWeight: 'bold', color: '#856404', cursor: 'pointer'}}>{noiData.filter(x => x.rank === '邀请赛金牌').length + noiD类Data.gold}</div><div style={{fontSize: '0.65rem', color: '#718096'}}>金牌</div></div>
-                  <div onClick={(e) => { e.stopPropagation(); setSelectedCompetition('NOI邀请赛'); setSelectedMedal('银牌'); }}><div style={{fontSize: '1.25rem', fontWeight: 'bold', color: '#6c757d', cursor: 'pointer'}}>{noiData.filter(x => x.rank === '邀请赛银牌').length + noiD类Data.silver}</div><div style={{fontSize: '0.65rem', color: '#718096'}}>银牌</div></div>
-                  <div onClick={(e) => { e.stopPropagation(); setSelectedCompetition('NOI邀请赛'); setSelectedMedal('铜牌'); }}><div style={{fontSize: '1.25rem', fontWeight: 'bold', color: '#8B4513', cursor: 'pointer'}}>{noiData.filter(x => x.rank === '邀请赛铜牌').length + noiD类Data.bronze}</div><div style={{fontSize: '0.65rem', color: '#718096'}}>铜牌</div></div>
+                  <div onClick={(e) => { e.stopPropagation(); setSelectedCompetition('NOI邀请赛'); setSelectedMedal('金牌'); }}><div style={{fontSize: '1.25rem', fontWeight: 'bold', color: '#856404', cursor: 'pointer'}}>{noiInvData.gold + noiD类Data.gold}</div><div style={{fontSize: '0.65rem', color: '#718096'}}>金牌</div></div>
+                  <div onClick={(e) => { e.stopPropagation(); setSelectedCompetition('NOI邀请赛'); setSelectedMedal('银牌'); }}><div style={{fontSize: '1.25rem', fontWeight: 'bold', color: '#6c757d', cursor: 'pointer'}}>{noiInvData.silver + noiD类Data.silver}</div><div style={{fontSize: '0.65rem', color: '#718096'}}>银牌</div></div>
+                  <div onClick={(e) => { e.stopPropagation(); setSelectedCompetition('NOI邀请赛'); setSelectedMedal('铜牌'); }}><div style={{fontSize: '1.25rem', fontWeight: 'bold', color: '#8B4513', cursor: 'pointer'}}>{noiInvData.bronze + noiD类Data.bronze}</div><div style={{fontSize: '0.65rem', color: '#718096'}}>铜牌</div></div>
                 </>}
                 {comp.key === 'WC' && <>
                   <div onClick={(e) => { e.stopPropagation(); setSelectedCompetition('WC'); setSelectedMedal('金牌'); }}><div style={{fontSize: '1.25rem', fontWeight: 'bold', color: '#856404', cursor: 'pointer'}}>8</div><div style={{fontSize: '0.65rem', color: '#718096'}}>金牌</div></div>
@@ -255,8 +274,7 @@ function Statistics() {
                   ))
                 })()}
                 {selectedCompetition === 'NOI邀请赛' && (() => {
-                  const noiInviteItems = noiData.filter(item => {
-                    if (!item.rank?.includes('邀请赛')) return false
+                  const noiInviteItems = _noiInvDedup.filter(item => {
                     if (selectedMedal && item.rank !== '邀请赛' + selectedMedal) return false
                     return true
                   }).map(item => ({
@@ -268,11 +286,17 @@ function Statistics() {
                     if (!item.contest?.includes('D类')) return false
                     if (selectedMedal && item.pride !== selectedMedal) return false
                     return true
-                  }).map(item => ({
-                    name: item.name,
-                    contest: item.contest,
-                    pride: item.pride
-                  }))
+                  }).map(item => {
+                    // Convert NOIxxxxD类 → full contest name (e.g. 第43届...NOI2026), medal add 邀请赛 prefix
+                    const match = item.contest.match(/NOI(\d{4})D类/)
+                    let contest = item.contest
+                    if (match) {
+                      const year = match[1]
+                      const nth = parseInt(year) - 1983
+                      contest = `第${nth}届全国青少年信息学奥林匹克竞赛（CCF NOI${year}）`
+                    }
+                    return { name: item.name, contest, pride: '邀请赛' + item.pride }
+                  })
                   return [...noiInviteItems, ...dLeiItems].sort((a, b) => {
                     const yearA = parseInt(a.contest.match(/NOI(\d{4})/)?.[1] || 0)
                     const yearB = parseInt(b.contest.match(/NOI(\d{4})/)?.[1] || 0)

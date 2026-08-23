@@ -222,5 +222,75 @@
     "competition": "第42届全国青少年信息学奥林匹克竞赛（CCF NOI2025）",
     "level": "国家级",
     "rank": "银牌"
+  },
+  {
+    "id": 45,
+    "name": "李悠然",
+    "competition": "第43届全国青少年信息学奥林匹克竞赛（CCF NOI2026）",
+    "level": "国家级",
+    "rank": "金牌"
+  },
+  {
+    "id": 46,
+    "name": "陈麓屹",
+    "competition": "第43届全国青少年信息学奥林匹克竞赛（CCF NOI2026）",
+    "level": "国家级",
+    "rank": "银牌"
+  },
+  {
+    "id": 47,
+    "name": "叶沐哲",
+    "competition": "第43届全国青少年信息学奥林匹克竞赛（CCF NOI2026）",
+    "level": "国家级",
+    "rank": "邀请赛银牌"
+  },
+  {
+    "id": 48,
+    "name": "尹俊淏",
+    "competition": "第43届全国青少年信息学奥林匹克竞赛（CCF NOI2026）",
+    "level": "国家级",
+    "rank": "邀请赛银牌"
+  },
+  {
+    "id": 49,
+    "name": "谢仁皓",
+    "competition": "第43届全国青少年信息学奥林匹克竞赛（CCF NOI2026）",
+    "level": "国家级",
+    "rank": "邀请赛铜牌"
+  },
+  {
+    "id": 50,
+    "name": "余若辰",
+    "competition": "第43届全国青少年信息学奥林匹克竞赛（CCF NOI2026）",
+    "level": "国家级",
+    "rank": "邀请赛铜牌"
+  },
+  {
+    "id": 51,
+    "name": "黄嘉文",
+    "competition": "第43届全国青少年信息学奥林匹克竞赛（CCF NOI2026）",
+    "level": "国家级",
+    "rank": "邀请赛铜牌"
+  },
+  {
+    "id": 52,
+    "name": "谢家昕",
+    "competition": "第42届全国青少年信息学奥林匹克竞赛（CCF NOI2025）",
+    "level": "国家级",
+    "rank": "邀请赛银牌"
+  },
+  {
+    "id": 53,
+    "name": "陈麓屹",
+    "competition": "第42届全国青少年信息学奥林匹克竞赛（CCF NOI2025）",
+    "level": "国家级",
+    "rank": "邀请赛银牌"
+  },
+  {
+    "id": 54,
+    "name": "李悠然",
+    "competition": "第42届全国青少年信息学奥林匹克竞赛（CCF NOI2025）",
+    "level": "国家级",
+    "rank": "邀请赛银牌"
   }
 ]

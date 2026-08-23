@@ -91,6 +91,16 @@ function Search() {
     return true
   })
 
+  // Build dedup keys from awards (year|name|isInvitational|medal) so noi entries already in awards are skipped
+  const awardKeys = new Set(
+    awardsData.map(a => {
+      const year = getContestYear(a.contest)
+      const isInv = a.contest.includes('D类') || a.pride.includes('邀请赛')
+      const medal = a.pride.replace('邀请赛', '')
+      return `${year}|${a.name}|${isInv ? 'inv' : 'reg'}|${medal}`
+    })
+  )
+
   // Filter NOI data
   const filteredNoi = noiData.filter(n => {
     const term = searchTerm.toLowerCase()
@@ -113,6 +123,13 @@ function Search() {
 
     // Apply year filter
     if (contestYear && getContestYear(n.competition) !== contestYear) return false
+
+    // Dedup against awards.json
+    const year = getContestYear(n.competition)
+    const isInv = n.rank?.includes('邀请赛')
+    const medal = (n.rank || '').replace('邀请赛', '')
+    const key = `${year}|${n.name}|${isInv ? 'inv' : 'reg'}|${medal}`
+    if (awardKeys.has(key)) return false
 
     return true
   })
@@ -169,11 +186,17 @@ function Search() {
       let studentAwards = awardsData.filter(a => a.name.toLowerCase().includes(term.toLowerCase()))
       if (type) studentAwards = studentAwards.filter(a => getBaseContest(a.contest) === type)
       if (year) studentAwards = studentAwards.filter(a => getContestYear(a.contest) === year)
-      // Also include NOI data
+      // Also include NOI data (deduped against awards)
       let studentNoi = noiData.filter(n => n.name.toLowerCase().includes(term.toLowerCase()))
       if (type === 'NOI' && type) studentNoi = studentNoi.filter(n => !n.rank?.includes('邀请赛'))
       if (type === 'NOI邀请赛' && type) studentNoi = studentNoi.filter(n => n.rank?.includes('邀请赛'))
       if (year) studentNoi = studentNoi.filter(n => getContestYear(n.competition) === year)
+      studentNoi = studentNoi.filter(n => {
+        const _y = getContestYear(n.competition)
+        const _isInv = n.rank?.includes('邀请赛')
+        const _medal = (n.rank || '').replace('邀请赛', '')
+        return !awardKeys.has(_y + '|' + n.name + '|' + (_isInv ? 'inv' : 'reg') + '|' + _medal)
+      })
       const allStudentAwards = [...studentAwards, ...studentNoi.map(n => ({
         name: n.name,
         contest: n.competition,
@@ -243,11 +266,17 @@ function Search() {
                 let studentAwards = awardsData.filter(a => a.name.toLowerCase().includes(term.toLowerCase()))
                 if (contestType) studentAwards = studentAwards.filter(a => getBaseContest(a.contest) === contestType)
                 if (contestYear) studentAwards = studentAwards.filter(a => getContestYear(a.contest) === contestYear)
-                // Also include NOI data
+                // Also include NOI data (deduped against awards)
                 let studentNoi = noiData.filter(n => n.name.toLowerCase().includes(term.toLowerCase()))
                 if (contestType === 'NOI' && contestType) studentNoi = studentNoi.filter(n => !n.rank?.includes('邀请赛'))
                 if (contestType === 'NOI邀请赛' && contestType) studentNoi = studentNoi.filter(n => n.rank?.includes('邀请赛'))
                 if (contestYear) studentNoi = studentNoi.filter(n => getContestYear(n.competition) === contestYear)
+                studentNoi = studentNoi.filter(n => {
+                  const _y = getContestYear(n.competition)
+                  const _isInv = n.rank?.includes('邀请赛')
+                  const _medal = (n.rank || '').replace('邀请赛', '')
+                  return !awardKeys.has(_y + '|' + n.name + '|' + (_isInv ? 'inv' : 'reg') + '|' + _medal)
+                })
                 const allStudentAwards = [...studentAwards, ...studentNoi.map(n => ({
                   name: n.name,
                   contest: n.competition,
@@ -434,7 +463,7 @@ function Search() {
       </div>
 
       {/* Results */}
-      <div style={{display: 'grid', gridTemplateColumns: selectedRecord ? '1fr 1fr' : '1fr', gap: '1rem'}}>
+      <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
         {/* List */}
         <div className="card" style={{maxHeight: '600px', overflowY: 'auto'}}>
           <h3 className="card-title">{searchType === 'name' ? '学生列表' : '赛事记录'}</h3>
@@ -445,7 +474,6 @@ function Search() {
                   <>
                     <th>姓名</th>
                     <th>获奖次数</th>
-                    <th>最近赛事</th>
                   </>
                 ) : (
                   <>
@@ -485,7 +513,6 @@ function Search() {
                     <>
                       <td style={{fontWeight: 'bold', color: 'var(--primary)'}}>{item.name}</td>
                       <td>{item.awards.length}</td>
-                      <td style={{fontSize: '0.875rem', color: '#718096'}}>{item.latestContest}</td>
                     </>
                   ) : (
                     <>
@@ -527,7 +554,7 @@ function Search() {
             </p>
 
             <h4 style={{color: 'var(--primary)', marginBottom: '0.5rem'}}>获奖记录</h4>
-            <div style={{maxHeight: '400px', overflowY: 'auto'}}>
+            <div>
               {[...selectedRecord.awards].reverse().map((award, idx) => (
                 <div
                   key={idx}
