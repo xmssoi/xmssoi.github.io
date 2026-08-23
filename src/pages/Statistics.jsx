@@ -82,31 +82,6 @@ function Statistics() {
     }).length,
   }
 
-  // NOI 邀请赛 yearly data
-  const noiInviteAllItems = [
-    ..._noiInvDedup.map(n => ({
-      name: n.name,
-      contest: n.competition,
-      medal: (n.rank || '').replace('邀请赛', ''),
-      year: parseInt(n.competition.match(/(\d{4})/)?.[1] || 0),
-      src: 'noi'
-    })),
-    ...awardsData.filter(a => a.contest?.includes('D类')).map(a => {
-      const m = a.contest.match(/NOI(\d{4})D类/)
-      const year = m ? parseInt(m[1]) : 0
-      return {
-        name: a.name,
-        contest: `第${year - 1983}届全国青少年信息学奥林匹克竞赛（CCF NOI${year}）`,
-        medal: a.pride,
-        year,
-        src: 'dLei'
-      }
-    })
-  ]
-  const noiInviteYears = [...new Set(noiInviteAllItems.map(i => i.year).filter(Boolean))].sort((a, b) => b - a)
-  const [noiInviteYear, setNoiInviteYear] = useState('全部')
-  const [noiInviteLevel, setNoiInviteLevel] = useState('全部')
-
   // NOIP普及组 awards.json counts
   const noipPujiAwardsData = {
     first: awardsData.filter(a => {
@@ -189,6 +164,31 @@ function Statistics() {
     silver: _noiInvDedup.filter(x => x.rank === '邀请赛银牌').length,
     bronze: _noiInvDedup.filter(x => x.rank === '邀请赛铜牌').length,
   }
+
+  // NOI 邀请赛 yearly data (defined here so _noiInvDedup and awardsData are both available)
+  const noiInviteAllItems = [
+    ..._noiInvDedup.map(n => ({
+      name: n.name,
+      contest: n.competition,
+      medal: (n.rank || '').replace('邀请赛', ''),
+      year: parseInt(n.competition.match(/(\d{4})/)?.[1] || 0),
+      src: 'noi'
+    })),
+    ...awardsData.filter(a => a.contest?.includes('D类')).map(a => {
+      const m = a.contest.match(/NOI(\d{4})D类/)
+      const year = m ? parseInt(m[1]) : 0
+      return {
+        name: a.name,
+        contest: `第${year - 1983}届全国青少年信息学奥林匹克竞赛（CCF NOI${year}）`,
+        medal: a.pride,
+        year,
+        src: 'dLei'
+      }
+    })
+  ]
+  const noiInviteYears = [...new Set(noiInviteAllItems.map(i => i.year).filter(Boolean))].sort((a, b) => b - a)
+  const [noiInviteYear, setNoiInviteYear] = useState('全部')
+  const [noiInviteLevel, setNoiInviteLevel] = useState('全部')
 
   // Competition totals for summary cards
   const competitionTotals = [
