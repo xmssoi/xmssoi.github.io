@@ -286,10 +286,7 @@ function Admin() {
       {/* NOI Data */}
       {activeTab === 'noi' && (
         <div style={{ background: 'white', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', padding: '1rem' }}>
-          <h3 style={{ marginBottom: '0.5rem' }}>NOI 年度统计</h3>
-          <p style={{ color: '#718096', fontSize: '0.8rem', marginBottom: '1rem' }}>
-            合并 noi.json + awards.json（NOI + D类，按 year|name|isInv|medal 去重）。邀请赛单独列示。
-          </p>
+          <h3 style={{ marginBottom: '1rem' }}>NOI 年度统计</h3>
           {(() => {
             const getYear = (comp) => {
               const match = comp.match(/NOI(\d{4})/)
