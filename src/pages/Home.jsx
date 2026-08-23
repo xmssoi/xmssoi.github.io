@@ -47,10 +47,28 @@ function Home() {
   const apioTotal = apioData.reduce((sum, y) => sum + (y.总数 || 0), 0)
   const apioGold = apioData.reduce((sum, y) => sum + (y.金牌 || 0), 0)
 
-  // NOI stats (only noi.json, NOT D类)
-  const noiGold = noiData.filter(x => x.rank === '金牌').length
-  const noiSilver = noiData.filter(x => x.rank === '银牌').length
-  const noiBronze = noiData.filter(x => x.rank === '铜牌').length
+  // NOI stats: use awards.json as primary source, noi.json deduped (consistent with Search.jsx)
+  const _awardKeys = new Set(awardsData.map(a => {
+    const _y = a.contest.match(/(\d{4})/)?.[1] || ''
+    const _isInv = a.contest.includes('D类') || a.pride.includes('邀请赛')
+    const _medal = a.pride.replace('邀请赛', '')
+    return _y + '|' + a.name + '|' + (_isInv ? 'inv' : 'reg') + '|' + _medal
+  }))
+  const _noiPosDedup = noiData.filter(n => {
+    if (n.rank?.includes('邀请赛')) return false
+    const _y = n.competition.match(/(\d{4})/)?.[1] || ''
+    return !_awardKeys.has(_y + '|' + n.name + '|reg|' + n.rank)
+  })
+  const _noiInvDedup = noiData.filter(n => {
+    if (!n.rank?.includes('邀请赛')) return false
+    const _y = n.competition.match(/(\d{4})/)?.[1] || ''
+    const _medal = (n.rank || '').replace('邀请赛', '')
+    return !_awardKeys.has(_y + '|' + n.name + '|inv|' + _medal)
+  })
+  const noiPosAwards = awardsData.filter(a => a.contest?.startsWith('NOI') && !a.contest.includes('D类'))
+  const noiGold = noiPosAwards.filter(a => a.pride === '金牌').length + _noiPosDedup.filter(x => x.rank === '金牌').length
+  const noiSilver = noiPosAwards.filter(a => a.pride === '银牌').length + _noiPosDedup.filter(x => x.rank === '银牌').length
+  const noiBronze = noiPosAwards.filter(a => a.pride === '铜牌').length + _noiPosDedup.filter(x => x.rank === '铜牌').length
 
   // NOI D类 records from awards.json (D类 = NOI邀请赛)
   const noiD类Data = {
@@ -59,10 +77,10 @@ function Home() {
     bronze: awardsData.filter(a => a.contest?.includes('D类') && a.pride === '铜牌').length,
   }
 
-  // NOI邀请赛 stats (D类 =邀请赛, same award type)
-  const noiInviteGold = noiData.filter(x => x.rank === '邀请赛金牌').length + noiD类Data.gold
-  const noiInviteSilver = noiData.filter(x => x.rank === '邀请赛银牌').length + noiD类Data.silver
-  const noiInviteBronze = noiData.filter(x => x.rank === '邀请赛铜牌').length + noiD类Data.bronze
+  // NOI邀请赛 stats (D类 =邀请赛, deduped)
+  const noiInviteGold = _noiInvDedup.filter(x => x.rank === '邀请赛金牌').length + noiD类Data.gold
+  const noiInviteSilver = _noiInvDedup.filter(x => x.rank === '邀请赛银牌').length + noiD类Data.silver
+  const noiInviteBronze = _noiInvDedup.filter(x => x.rank === '邀请赛铜牌').length + noiD类Data.bronze
 
   // WC stats (from awards.json WC entries)
   const wcGold = 8
@@ -203,7 +221,7 @@ function Home() {
           {/* NOI邀请赛 */}
           <div style={{background: 'white', padding: '1rem', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
             <h3 style={{color: 'var(--primary)', marginBottom: '0.25rem', fontSize: '1rem'}}>NOI 邀请赛</h3>
-            <p style={{color: '#718096', fontSize: '0.75rem', marginBottom: '0.75rem'}}>2012-2025</p>
+            <p style={{color: '#718096', fontSize: '0.75rem', marginBottom: '0.75rem'}}>2011-2026</p>
             <div style={{display: 'flex', justifyContent: 'space-around', textAlign: 'center'}}>
               <div>
                 <div style={{fontSize: '1.25rem', fontWeight: 'bold', color: '#856404'}}>{noiInviteGold}</div>
