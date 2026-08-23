@@ -61,8 +61,35 @@ function Admin() {
               <div className="stat-label">APIO年份</div>
             </div>
             <div className="stat-card">
-              <div className="stat-value">{noi.length}</div>
-              <div className="stat-label">NOI记录</div>
+              <div className="stat-value">{
+                (() => {
+                  const seen = new Set()
+                  let count = 0
+                  noi.forEach(r => {
+                    const m = r.competition?.match(/NOI(\d{4})/)
+                    if (!m) return
+                    const isInv = r.rank?.includes('邀请赛')
+                    const medal = (r.rank || '').replace('邀请赛', '')
+                    const key = m[1] + '|' + r.name + '|' + (isInv ? 'inv' : 'reg') + '|' + medal
+                    if (seen.has(key)) return
+                    seen.add(key)
+                    count++
+                  })
+                  awards.forEach(a => {
+                    if (!a.contest?.startsWith('NOI')) return
+                    const m = a.contest.match(/NOI(\d{4})/)
+                    if (!m) return
+                    const isInv = a.contest.includes('D类') || a.pride.includes('邀请赛')
+                    const medal = a.pride.replace('邀请赛', '')
+                    const key = m[1] + '|' + a.name + '|' + (isInv ? 'inv' : 'reg') + '|' + medal
+                    if (seen.has(key)) return
+                    seen.add(key)
+                    count++
+                  })
+                  return count
+                })()
+              }</div>
+              <div className="stat-label">NOI记录（去重）</div>
             </div>
           </div>
         </div>
@@ -259,20 +286,52 @@ function Admin() {
       {/* NOI Data */}
       {activeTab === 'noi' && (
         <div style={{ background: 'white', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', padding: '1rem' }}>
-          <h3 style={{ marginBottom: '1rem' }}>NOI 年度统计</h3>
+          <h3 style={{ marginBottom: '0.5rem' }}>NOI 年度统计</h3>
+          <p style={{ color: '#718096', fontSize: '0.8rem', marginBottom: '1rem' }}>
+            合并 noi.json + awards.json（NOI + D类，按 year|name|isInv|medal 去重）。邀请赛单独列示。
+          </p>
           {(() => {
             const getYear = (comp) => {
               const match = comp.match(/NOI(\d{4})/)
               return match ? match[1] : null
             }
-            const yearStats = {}
+            const seen = new Set()
+            const items = []
             noi.forEach(r => {
               const y = getYear(r.competition)
               if (!y) return
-              if (!yearStats[y]) {
-                yearStats[y] = { 金牌: 0, 银牌: 0, 铜牌: 0, 邀请赛金牌: 0, 邀请赛银牌: 0, 邀请赛铜牌: 0 }
+              const isInv = r.rank?.includes('邀请赛')
+              const medal = (r.rank || '').replace('邀请赛', '')
+              const key = y + '|' + r.name + '|' + (isInv ? 'inv' : 'reg') + '|' + medal
+              if (seen.has(key)) return
+              seen.add(key)
+              items.push({ year: y, medal, isInv })
+            })
+            awards.forEach(a => {
+              if (!a.contest?.startsWith('NOI')) return
+              const y = getYear(a.contest)
+              if (!y) return
+              const isInv = a.contest.includes('D类') || a.pride.includes('邀请赛')
+              const medal = a.pride.replace('邀请赛', '')
+              const key = y + '|' + a.name + '|' + (isInv ? 'inv' : 'reg') + '|' + medal
+              if (seen.has(key)) return
+              seen.add(key)
+              items.push({ year: y, medal, isInv })
+            })
+            const yearStats = {}
+            items.forEach(it => {
+              if (!yearStats[it.year]) {
+                yearStats[it.year] = { 金牌: 0, 银牌: 0, 铜牌: 0, 邀请赛金牌: 0, 邀请赛银牌: 0, 邀请赛铜牌: 0 }
               }
-              if (yearStats[y][r.rank] !== undefined) yearStats[y][r.rank]++
+              if (it.isInv) {
+                if (it.medal === '金牌') yearStats[it.year].邀请赛金牌++
+                else if (it.medal === '银牌') yearStats[it.year].邀请赛银牌++
+                else if (it.medal === '铜牌') yearStats[it.year].邀请赛铜牌++
+              } else {
+                if (it.medal === '金牌') yearStats[it.year].金牌++
+                else if (it.medal === '银牌') yearStats[it.year].银牌++
+                else if (it.medal === '铜牌') yearStats[it.year].铜牌++
+              }
             })
             const years = Object.keys(yearStats).sort((a, b) => b - a)
             return (
@@ -280,20 +339,32 @@ function Admin() {
                 <thead>
                   <tr style={{ background: '#F7FAFC' }}>
                     <th style={{ padding: '0.75rem', textAlign: 'center', borderBottom: '1px solid var(--border)' }}>年份</th>
-                    <th style={{ padding: '0.75rem', textAlign: 'center', borderBottom: '1px solid var(--border)', color: '#856404' }}>金牌</th>
-                    <th style={{ padding: '0.75rem', textAlign: 'center', borderBottom: '1px solid var(--border)', color: '#6c757d' }}>银牌</th>
-                    <th style={{ padding: '0.75rem', textAlign: 'center', borderBottom: '1px solid var(--border)', color: '#8B4513' }}>铜牌</th>
+                    <th style={{ padding: '0.75rem', textAlign: 'center', borderBottom: '1px solid var(--border)', color: '#856404' }}>正赛 金</th>
+                    <th style={{ padding: '0.75rem', textAlign: 'center', borderBottom: '1px solid var(--border)', color: '#6c757d' }}>正赛 银</th>
+                    <th style={{ padding: '0.75rem', textAlign: 'center', borderBottom: '1px solid var(--border)', color: '#8B4513' }}>正赛 铜</th>
+                    <th style={{ padding: '0.75rem', textAlign: 'center', borderBottom: '1px solid var(--border)', color: '#856404' }}>邀请赛 金</th>
+                    <th style={{ padding: '0.75rem', textAlign: 'center', borderBottom: '1px solid var(--border)', color: '#6c757d' }}>邀请赛 银</th>
+                    <th style={{ padding: '0.75rem', textAlign: 'center', borderBottom: '1px solid var(--border)', color: '#8B4513' }}>邀请赛 铜</th>
+                    <th style={{ padding: '0.75rem', textAlign: 'center', borderBottom: '1px solid var(--border)' }}>总计</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {years.map(y => (
-                    <tr key={y} style={{ borderBottom: '1px solid #EDF2F7' }}>
-                      <td style={{ padding: '0.75rem', textAlign: 'center', fontWeight: 'bold' }}>{y}</td>
-                      <td style={{ padding: '0.75rem', textAlign: 'center', fontWeight: 'bold', color: '#856404' }}>{yearStats[y].金牌}</td>
-                      <td style={{ padding: '0.75rem', textAlign: 'center', fontWeight: 'bold', color: '#6c757d' }}>{yearStats[y].银牌}</td>
-                      <td style={{ padding: '0.75rem', textAlign: 'center', fontWeight: 'bold', color: '#8B4513' }}>{yearStats[y].铜牌}</td>
-                    </tr>
-                  ))}
+                  {years.map(y => {
+                    const s = yearStats[y]
+                    const total = s.金牌 + s.银牌 + s.铜牌 + s.邀请赛金牌 + s.邀请赛银牌 + s.邀请赛铜牌
+                    return (
+                      <tr key={y} style={{ borderBottom: '1px solid #EDF2F7' }}>
+                        <td style={{ padding: '0.75rem', textAlign: 'center', fontWeight: 'bold' }}>{y}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center', fontWeight: 'bold', color: s.金牌 > 0 ? '#856404' : '#cbd5e0' }}>{s.金牌}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center', fontWeight: 'bold', color: s.银牌 > 0 ? '#6c757d' : '#cbd5e0' }}>{s.银牌}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center', fontWeight: 'bold', color: s.铜牌 > 0 ? '#8B4513' : '#cbd5e0' }}>{s.铜牌}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center', color: s.邀请赛金牌 > 0 ? '#856404' : '#cbd5e0' }}>{s.邀请赛金牌}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center', color: s.邀请赛银牌 > 0 ? '#6c757d' : '#cbd5e0' }}>{s.邀请赛银牌}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center', color: s.邀请赛铜牌 > 0 ? '#8B4513' : '#cbd5e0' }}>{s.邀请赛铜牌}</td>
+                        <td style={{ padding: '0.75rem', textAlign: 'center', fontWeight: 'bold' }}>{total}</td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
               </table>
             )
