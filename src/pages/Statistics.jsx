@@ -398,6 +398,7 @@ function Statistics() {
                   <th style={{padding: '0.5rem', textAlign: 'center', borderBottom: '2px solid var(--border)', color: '#6c757d'}}>银牌</th>
                   <th style={{padding: '0.5rem', textAlign: 'center', borderBottom: '2px solid var(--border)', color: '#8B4513'}}>铜牌</th>
                   <th style={{padding: '0.5rem', textAlign: 'center', borderBottom: '2px solid var(--border)'}}>总计</th>
+                  <th style={{padding: '0.5rem', textAlign: 'center', borderBottom: '2px solid var(--border)'}}>noiD 类</th>
                 </tr>
               </thead>
               <tbody>
@@ -406,6 +407,8 @@ function Statistics() {
                   const gold = items.filter(i => i.medal === '金牌').length
                   const silver = items.filter(i => i.medal === '银牌').length
                   const bronze = items.filter(i => i.medal === '铜牌').length
+                  const dLeiCount = items.filter(i => i.src === 'dLei').length
+                  const noiCount = items.filter(i => i.src === 'noi').length
                   const isSelected = noiInviteYear === y
                   return (
                     <tr key={y} onClick={() => { setNoiInviteYear(isSelected ? '全部' : y); setNoiInviteLevel('全部'); }}
@@ -415,6 +418,18 @@ function Statistics() {
                       <td style={{padding: '0.5rem', textAlign: 'center', color: silver > 0 ? '#6c757d' : '#cbd5e0'}}>{silver}</td>
                       <td style={{padding: '0.5rem', textAlign: 'center', color: bronze > 0 ? '#8B4513' : '#cbd5e0'}}>{bronze}</td>
                       <td style={{padding: '0.5rem', textAlign: 'center', fontWeight: 'bold'}}>{gold + silver + bronze}</td>
+                      <td style={{padding: '0.5rem', textAlign: 'center'}}>
+                        {dLeiCount > 0 && (
+                          <span style={{display: 'inline-block', padding: '0.15rem 0.5rem', marginRight: '0.25rem', borderRadius: '4px', fontSize: '0.7rem', background: '#e9d8fd', color: '#6b46c1', fontWeight: 'bold'}}>
+                            D类 {dLeiCount}
+                          </span>
+                        )}
+                        {noiCount > 0 && (
+                          <span style={{display: 'inline-block', padding: '0.15rem 0.5rem', borderRadius: '4px', fontSize: '0.7rem', background: '#bee3f8', color: '#2c5282', fontWeight: 'bold'}}>
+                            noi {noiCount}
+                          </span>
+                        )}
+                      </td>
                     </tr>
                   )
                 })}
@@ -424,6 +439,9 @@ function Statistics() {
                   <td style={{padding: '0.5rem', textAlign: 'center', color: '#6c757d'}}>{noiInviteAllItems.filter(i => i.medal === '银牌').length}</td>
                   <td style={{padding: '0.5rem', textAlign: 'center', color: '#8B4513'}}>{noiInviteAllItems.filter(i => i.medal === '铜牌').length}</td>
                   <td style={{padding: '0.5rem', textAlign: 'center'}}>{noiInviteAllItems.length}</td>
+                  <td style={{padding: '0.5rem', textAlign: 'center', fontSize: '0.7rem'}}>
+                    D类 {noiInviteAllItems.filter(i => i.src === 'dLei').length} / noi {noiInviteAllItems.filter(i => i.src === 'noi').length}
+                  </td>
                 </tr>
               </tbody>
             </table>
