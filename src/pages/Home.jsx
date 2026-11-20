@@ -324,7 +324,7 @@ function Home() {
           {/* CSP-S */}
           <div style={{background: 'white', padding: '1rem', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
             <h3 style={{color: 'var(--primary)', marginBottom: '0.25rem', fontSize: '1rem'}}>CSP-S 提高级</h3>
-            <p style={{color: '#718096', fontSize: '0.75rem', marginBottom: '0.75rem'}}>2019-2025</p>
+            <p style={{color: '#718096', fontSize: '0.75rem', marginBottom: '0.75rem'}}>2019-2026</p>
             <div style={{display: 'flex', justifyContent: 'space-around', textAlign: 'center'}}>
               <div>
                 <div style={{fontSize: '1.25rem', fontWeight: 'bold', color: '#856404'}}>{cspData.reduce((sum, y) => sum + (y['CSP-S']?.一等奖 || 0), 0)}</div>
@@ -344,7 +344,7 @@ function Home() {
           {/* CSP-J */}
           <div style={{background: 'white', padding: '1rem', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'}}>
             <h3 style={{color: 'var(--secondary)', marginBottom: '0.25rem', fontSize: '1rem'}}>CSP-J 入门级</h3>
-            <p style={{color: '#718096', fontSize: '0.75rem', marginBottom: '0.75rem'}}>2019-2025</p>
+            <p style={{color: '#718096', fontSize: '0.75rem', marginBottom: '0.75rem'}}>2019-2026</p>
             <div style={{display: 'flex', justifyContent: 'space-around', textAlign: 'center'}}>
               <div>
                 <div style={{fontSize: '1.25rem', fontWeight: 'bold', color: '#856404'}}>{cspData.reduce((sum, y) => sum + (y['CSP-J']?.一等奖 || 0), 0)}</div>
