@@ -1,4 +1,4 @@
-import { HashRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { HashRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom'
 import Home from './pages/Home'
 import Timeline from './pages/Timeline'
 import Statistics from './pages/Statistics'
@@ -28,10 +28,16 @@ function App() {
           <main className="main-content">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/首页" element={<Home />} />
               <Route path="/timeline" element={<Timeline />} />
+              <Route path="/时间轴" element={<Timeline />} />
               <Route path="/statistics" element={<Statistics />} />
+              <Route path="/统计分析" element={<Statistics />} />
               <Route path="/search" element={<Search />} />
+              <Route path="/学生查询" element={<Search />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/数据统计" element={<Admin />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
           <footer className="footer">
