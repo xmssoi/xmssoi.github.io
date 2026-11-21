@@ -368,8 +368,8 @@ function Home() {
         <h2 style={{fontSize: '1.25rem', color: 'var(--primary)', marginBottom: '1rem', fontWeight: 'bold'}}>团队荣誉</h2>
         <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center'}}>
           {[
-            { year: '2004年', name: 'NOIP2003', award: '优秀参赛学校', img: '/picture/2003.jpg' },
-            { year: '2005年', name: 'NOIP2004', award: '优秀参赛学校', img: '/picture/2004.jpg' },
+            { year: '', name: 'NOIP2003', award: '优秀参赛学校', img: '/picture/2003.jpg' },
+            { year: '', name: 'NOIP2004', award: '优秀参赛学校', img: '/picture/2004.jpg' },
             { year: '2014年', name: 'NOI30周年', award: '特色学校奖', img: '/picture/2014.jpg' },
             { year: '2019年', name: 'NOI35周年', award: '优秀学校', img: '/picture/2019.jpg' },
             { year: '2024年', name: 'NOI40周年', award: '优秀学校', img: '/picture/2024.jpg' },
@@ -392,7 +392,7 @@ function Home() {
               }}
             >
               <div>
-                <div style={{fontWeight: 'bold', color: 'var(--primary)'}}>{item.year} {item.name}</div>
+                <div style={{fontWeight: 'bold', color: 'var(--primary)'}}>{[item.year, item.name].filter(Boolean).join(' ')}</div>
                 <div style={{fontWeight: 'bold', color: 'var(--accent)'}}>{item.award}</div>
               </div>
               {item.img ? (
